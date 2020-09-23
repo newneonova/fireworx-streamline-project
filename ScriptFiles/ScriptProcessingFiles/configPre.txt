@@ -1,0 +1,94 @@
+% fireworx_config
+% 
+% User inputs for analyzing data from the FIRe. This is the only file users
+% need to alter before processing data with fireworx. Note that, at this
+% time, only single turnover induction is fit for fluorescence parameters.
+% Single turnover relaxation will be fit in future versions. 
+% 
+% See fireworx_read_me.pdf for more information about how data are
+% processed. 
+% 
+% Type "help fire_matlab" at the command prompt for general Matlab usage
+% information. (ie. what is a string? what is a structure array?)
+% 
+% All programs in the fireworx package have individual documentation. Type
+% "help program_name" at the command line to see this information. 
+% 
+% Fields in the "settings" structure array with options are listed
+% below. For a more comprenensive description type "edit fireworx_config"
+% at the command line and scroll down. 
+% 
+%   blank_subtract   = number: 1 or 0
+%   gain_calibrate   = number: 1 or 0
+%   calc_rfu         = number: 1 or 0
+%   use_rep          = string: 'cal' or 'ex'
+%   blue_calfactor   = number: units of umol m-2 s-1
+%   green_calfactor  = number: units of umol m-2 s-1
+%   fop_calfactor    = number: units of umol m-2 s-1
+%   sig_rel          = number: 1 or 0
+%   first_time_point = number: units of us
+%   gain_calpath     = string: end character of '/'
+%   led_calpath      = string: end character of '/'
+%   datapath         = string: end character of '/'
+%   maketextfile     = number: 1 or 0
+%   outname          = string: batch name of *.mat and *.txt output
+%   datadate         = string: format 'YYYYMMDD' or 'MthDDYY'
+%   datafile         = string: batch file name
+%   skip_datafile    = vector: skip these file numbers during processing
+%   datablank        = string: batch blank file name
+%   skip_datablank   = vector: skip these file numbers during processing
+%   substitute_blank = number: 1 or 0
+%   dyecon           = number: concentraiton of fluorescent dye
+%   dyefile          = string: batch dye file name
+%   skip_dyefile     = vector: skip these file numbers during processing
+%   dyeblank         = string: batch blank file name for the dye
+%   skip_dyeblank    = vector: skip these file numbers during processing
+%   doplots          = number: 1 or 0
+%   fit_sti          = number: 1 or 0
+%   sti_model        = string: 'sti_fofmsig','sti_fofmsigp','sti_fofmsig_pcon',
+%                              'sti_p','sti_fofmsig_pfirst','sti_fofmsig_plast'
+%   sti_pfiles       = vector: use these file numbers to fit p
+%   sti_cv           = vector: use these values for constant variables. 
+%                              If sti_model is 'sti_p': [Fo Fm sigma]
+%                              If sti_model is 'sti_fofmsig_pcon': [p]
+%   fit_str          = number: 1 or 0
+%   str_model        = string: 'str_tau1x','str_tau1xcon','str_tau2x',
+%                              'str_tau2xcon'
+%   str_cv           = vector: use these values for constant variables.
+%                              If str_model is 'str_tau': [Fo Fm]
+% 
+% Note: All fields in the settings structure array must be specified, you
+% can not leave a field blank or delete it. You can, however, enter the
+% empty set: [] for vectors or ' ' for strings. 
+% 
+% copyright(c) 2007 Audrey B. Barnett
+% email: audrey.barnett@dal.ca
+% see fireworx_copyright for full details.
+
+% Created on 28 JUN 06 by AB
+% Last modified on 2008 FEB 21 by AB
+
+%% __________________________________________________________
+% Initialize settings structure. Do not modify. 
+settings=struct;
+
+%% __________________________________________________________
+% Change settings from here down. If you wish to process more than one
+% set of files at a time, simply copy/paste the entire structure array and
+% increase the index by one. For example settings(1).* would change to
+% settings(2).*
+
+settings(1).blank_subtract   = 0;
+settings(1).gain_calibrate   = 0;
+settings(1).calc_rfu         = 0;
+settings(1).use_rep          = 'ex';
+settings(1).blue_calfactor   = 40581.40;
+settings(1).green_calfactor  = 29069.77;
+settings(1).fop_calfactor    = 36227.27;
+settings(1).sig_rel          = 1;
+
+settings(1).first_time_point = 3;
+
+settings(1).gain_calpath   = '';
+settings(1).led_calpath    = '';
+settings(1).datapath       =

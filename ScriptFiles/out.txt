@@ -1,0 +1,369 @@
+% fireworx_config
+% 
+% User inputs for analyzing data from the FIRe. This is the only file users
+% need to alter before processing data with fireworx. Note that, at this
+% time, only single turnover induction is fit for fluorescence parameters.
+% Single turnover relaxation will be fit in future versions. 
+% 
+% See fireworx_read_me.pdf for more information about how data are
+% processed. 
+% 
+% Type "help fire_matlab" at the command prompt for general Matlab usage
+% information. (ie. what is a string? what is a structure array?)
+% 
+% All programs in the fireworx package have individual documentation. Type
+% "help program_name" at the command line to see this information. 
+% 
+% Fields in the "settings" structure array with options are listed
+% below. For a more comprenensive description type "edit fireworx_config"
+% at the command line and scroll down. 
+% 
+%   blank_subtract   = number: 1 or 0
+%   gain_calibrate   = number: 1 or 0
+%   calc_rfu         = number: 1 or 0
+%   use_rep          = string: 'cal' or 'ex'
+%   blue_calfactor   = number: units of umol m-2 s-1
+%   green_calfactor  = number: units of umol m-2 s-1
+%   fop_calfactor    = number: units of umol m-2 s-1
+%   sig_rel          = number: 1 or 0
+%   first_time_point = number: units of us
+%   gain_calpath     = string: end character of '/'
+%   led_calpath      = string: end character of '/'
+%   datapath         = string: end character of '/'
+%   maketextfile     = number: 1 or 0
+%   outname          = string: batch name of *.mat and *.txt output
+%   datadate         = string: format 'YYYYMMDD' or 'MthDDYY'
+%   datafile         = string: batch file name
+%   skip_datafile    = vector: skip these file numbers during processing
+%   datablank        = string: batch blank file name
+%   skip_datablank   = vector: skip these file numbers during processing
+%   substitute_blank = number: 1 or 0
+%   dyecon           = number: concentraiton of fluorescent dye
+%   dyefile          = string: batch dye file name
+%   skip_dyefile     = vector: skip these file numbers during processing
+%   dyeblank         = string: batch blank file name for the dye
+%   skip_dyeblank    = vector: skip these file numbers during processing
+%   doplots          = number: 1 or 0
+%   fit_sti          = number: 1 or 0
+%   sti_model        = string: 'sti_fofmsig','sti_fofmsigp','sti_fofmsig_pcon',
+%                              'sti_p','sti_fofmsig_pfirst','sti_fofmsig_plast'
+%   sti_pfiles       = vector: use these file numbers to fit p
+%   sti_cv           = vector: use these values for constant variables. 
+%                              If sti_model is 'sti_p': [Fo Fm sigma]
+%                              If sti_model is 'sti_fofmsig_pcon': [p]
+%   fit_str          = number: 1 or 0
+%   str_model        = string: 'str_tau1x','str_tau1xcon','str_tau2x',
+%                              'str_tau2xcon'
+%   str_cv           = vector: use these values for constant variables.
+%                              If str_model is 'str_tau': [Fo Fm]
+% 
+% Note: All fields in the settings structure array must be specified, you
+% can not leave a field blank or delete it. You can, however, enter the
+% empty set: [] for vectors or ' ' for strings. 
+% 
+% copyright(c) 2007 Audrey B. Barnett
+% email: audrey.barnett@dal.ca
+% see fireworx_copyright for full details.
+
+% Created on 28 JUN 06 by AB
+% Last modified on 2008 FEB 21 by AB
+
+%% __________________________________________________________
+% Initialize settings structure. Do not modify. 
+settings=struct;
+
+%% __________________________________________________________
+% Change settings from here down. If you wish to process more than one
+% set of files at a time, simply copy/paste the entire structure array and
+% increase the index by one. For example settings(1).* would change to
+% settings(2).*
+
+settings(1).blank_subtract   = 0;
+settings(1).gain_calibrate   = 0;
+settings(1).calc_rfu         = 0;
+settings(1).use_rep          = 'ex';
+settings(1).blue_calfactor   = 40581.40;
+settings(1).green_calfactor  = 29069.77;
+settings(1).fop_calfactor    = 36227.27;
+settings(1).sig_rel          = 1;
+
+settings(1).first_time_point = 3;
+
+settings(1).gain_calpath   = '';
+settings(1).led_calpath    = '';
+settings(1).datapath       = 'C:\Users\RSF\Documents\GitHub\fireworx-streamline-project\fireworxProcessing\'; 
+
+settings(1).maketextfile   = 1;
+settings(1).outname        = 'pro';
+
+settings(1).datadate       = '';
+settings(1).datafile       = 'DES823B'; 
+settings(1).skip_datafile  = [];
+settings(1).datablank      = '';
+settings(1).skip_datablank = [];
+settings(1).substitute_blank = 0;
+
+settings(1).dyecon         = 100;
+settings(1).dyefile        = '';
+settings(1).skip_dyefile   = [];
+settings(1).dyeblank       = '';
+settings(1).skip_dyeblank  = [];
+
+settings(1).doplots        = 1;
+
+settings(1).fit_sti        = 1;
+settings(1).sti_model      = 'sti_fofmsigp';
+settings(1).sti_pfiles     = [];
+settings(1).sti_cv         = [];
+
+settings(1).fit_str        = 1;
+settings(1).str_model      = 'str_tau1x';
+settings(1).str_cv         =[];
+
+
+%% __________________________________________________________
+%  List of abbreviations:
+%    sti = single turnover induction
+%    str = single turnover relaxation
+%    mti = multiple turnover induction
+%    mtr = multiple turnover relaxation
+%    rfu = relative fluorescence units
+%    rep = reference excitation profile
+%
+% Type "help fire_matlab" at the command prompt for general Matlab usage
+% information. (ie. what is a string? what is a structure array?)
+% 
+% Note: All fields in the settings structure array must be specified, you
+% can not leave a field blank or delete it. You can, however, enter the
+% empty set: [] for vectors or ' ' for strings. 
+
+
+%% __________________________________________________________
+% Description of options for each field in the settings structure array 
+%__________________________________________________________
+% Field: blank_subtract
+%  Would you like to subtract a blank from the data?
+%  Choose one of the following, input as a number:
+%     yes = 1
+%     no  = 0
+%  If you choose yes, the following fields must be specified:
+%  'datablank','skip_datablank','substitue_blank'
+
+%__________________________________________________________
+% Field: gain_calibrate
+%  Would you like to adjust data to a gain calibration?
+%  Choose one of the following, input as a number:
+%     yes = 1
+%     no  = 0
+%  If you choose yes, the following fields must be specified:
+%  'gain_calpath'
+
+%__________________________________________________________
+% Field: calc_rfu
+%  Would you like express fluorescence in units relative to
+%  a fluorescent dye?
+%  Choose one of the following, input as a number:
+%     yes = 1
+%     no  = 0
+%  If you choose yes, the following fields must be specified:
+%  'dyecon','dyefile','skip_dyefile','dyeblank','skip_dyeblank'
+
+%__________________________________________________________
+% Field: use_rep
+%  Which reference excitation profile would you like to use?
+%  Choose one of the following, input as a string:
+%     cal = from a calibration
+%     ex  = from the "ex" data column recorded in the file at the time of
+%           measurement
+%  If you choose cal, the following fields must be specified:
+%  'led_calpath'. 
+%  Also, the appropriate calibration factors provided by Satlantic for each
+%  LED must be provided in the fields 'blue_calfactor','green_calfactor', or
+%  'fop_calfactor'
+
+%__________________________________________________________
+% Field: blue_calfactor
+%        green_calfactor
+%        fop_calfactor
+%  Calibration factors for each LED as provided by Satlantic. Input as a
+%  number in units of umol photons m-2 s-1. Must be specified if field
+%  var_return is set to "all" or "fit"
+
+%__________________________________________________________
+% Field: sig_rel
+%  Would you like to fit a relative rather than absolute sigma?
+%  Choose one of the following, input as a number:
+%     yes = 1
+%     no  = 0
+
+%__________________________________________________________
+% Field: first_time_point
+%  First time point included in the fit of single turnover induction. This
+%  allows the user to skip points that may be inconsistent due to the
+%  reference excitation profile (Barnett et al. in prep.). Input as a
+%  number in units of us. For example, if you wanted to skip the first 4 us
+%  of the sti flash, then first_time_point=5. If you want to use all time
+%  points, then first_time_point=1. 
+
+%__________________________________________________________
+% Field: gain_calpath
+%  Full path to the appropriate gain calibration. Input as a string. Be
+%  sure to include '/' as the last character. Must be specified if field
+%  'gain_calibrate' is set to 1.
+
+%__________________________________________________________
+% Field: led_calpath
+%  Full path to the appropriate led calibration. Input as a string. Be sure
+%  to include '/' as the last character. Must be specified if field use_rep
+%  is set to 'cal'. 
+
+%__________________________________________________________
+% Field: datapath
+%  Full path to the data location. Input as a string. Be sure to include 
+%  '/' as the last character. 
+
+%__________________________________________________________
+% Field: maketextfile
+%  Would you like to save data output as a tab-deliniated text file?
+%  Choose one of the following, input as a number:
+%     yes = 1
+%     no  = 0
+%  For data output, file will be named: outname_data, for fit output, file
+%  will be named: outname_sti_fit. The text file will be stored in
+%  datapath. 
+
+%__________________________________________________________
+% Field: outname
+%  Desired name of output *.mat and *.txt files, input as a string.
+%  DO NOT include the *.txt or *.mat in the outname, the program will
+%  insert that itself. Note that outnames can not start with a number. For
+%  example: outname='1015TP' is not acceptable, where outname='TP1015' is. 
+
+%__________________________________________________________
+% Field: datadate
+%  Date of sample measurement as a string. Can either be in the format
+%  'YYYYMMDD' or 'MthDDYY'. For example, May 26th, 2007 would be either
+%  '20070526' or 'May0507'. The reason for having this field is to make
+%  sure that the date recorded in the FIRe data files matches reality. 
+
+%__________________________________________________________
+% Field: datafile
+%  Batch name of the data file as a text string. Program assumes
+%  all files increase sequentially from datafile.000 (Except see
+%  field: skip_datafile).
+
+%__________________________________________________________
+% Field: skip_datafile
+%  Vector of file numbers to be skipped. For example, if you wish to skip
+%  files *.006, *.040, and *.856, then skip_datafile=[6 40 856]. Note this 
+%  literally skips the file, no placeholder column is generated. If skipfile
+%  is empty, the default is to process all files sequentially from 
+%  datafile.000.
+%  Note: Recall that the program assumes all files with name 'datafile'
+%  start at datafile.000 increse sequentially in increments of 1. Thus, 
+%  if a filenumber is missing from the data file sequence THE PROGRAM
+%  WILL ASSUME IT HAS PROCESSED ALL DATA FILES. For example, if
+%  datafile.010 does not exist, but datafile.011 does, the program will
+%  only process files *.000 to *.009. If you specify skip_datafile=[10],
+%  then the program will process files *.000 to *.009 and *.011 and up. 
+
+%__________________________________________________________
+% Field: datablank, skip_datablank
+%  Batch name of the blank file as a text string, and vector of file numbers
+%  to be skipped, as for datafile and skip_datafile. Must be specified if
+%  blank_subtract is set to 1.
+
+%__________________________________________________________
+% Field: substitute_blank
+%  The blanking program assumes a blank is measured at each gain setting 
+%  used during sample measurement. If a blank is missing for a gain
+%  setting, the blanking program will return NaNs OR a gain calibration can
+%  be applied to all other blank measurements and substituted for the
+%  missing value. 
+%  Choose one of the following, input as a number:
+%     yes = 1
+%     no  = 0
+%  If yes, field gain_calpath must be specified.
+
+%__________________________________________________________
+% Field: dyecon
+%  Concentration of the fluorescent dye used to generate relative
+%  fluorescence units. Can have any units. Return data will have the same
+%  units. Must be specified if calc_rfu is set to 1.
+
+%__________________________________________________________
+% Field: dyefile, skip_dyefile
+%  Batch name of the dye file as a text string, and vector of file numbers
+%  to be skipped, as for datafile and skip_datafile. Must be specified if
+%  calc_rfu is set to 1.
+
+%__________________________________________________________
+% Field: dyeblank, skip_dyeblank
+%  Batch name of the dye blank file as a text string, and vector of file numbers
+%  to be skipped, as for datafile and skip_datafile. Must be specified if
+%  calc_rfu is set to 1. There is no option to generate relative
+%  fluroescence units without a blank. 
+
+%__________________________________________________________
+% Field: doplots
+%  Would you like to see a plot of each fit?
+%  Choose one of the following, input as a number:
+%     yes = 1
+%     no  = 0
+
+%__________________________________________________________
+% Field: fit_sti
+%  Fit single turnover induciton?
+%  Choose one of the following, input as a number:
+%     yes = 1
+%     no  = 0
+
+%__________________________________________________________
+% Field: sti_model
+%  Specified model for curve fit of single turnover induction.
+%  Choose one of the following options, input as a text string.
+%    sti_fofmsig        = fit fo, fm and sigma
+%    sti_fofmsigp       = fit fo, fm, sigma and p
+%    sti_fofmsig_pcon   = fit fo, fm, and sigma holding p constant
+%    sti_p              = fit p, holding fo, fm and sigma constant
+%    sti_fofmsig_pfirst = select files to fit p, then fit all remaining
+%                         files holding p at this value
+%    sti_fofmsig_plast  = fit for fo, fm and sig, then fit again for p,
+%                         holding the first three constant
+
+%__________________________________________________________
+% Field: sti_pfiles
+%  Vector of file numbers used to calculate connectivity (p). For example,
+%  if you wish to use filnumbers *.006 through *.010 to estimate p, then
+%  sti_pfiles=[6:10]. Must be specified if sti_model is 
+%  'sat_fofmsig_pfirst'. 
+
+%__________________________________________________________
+% Field: sti_cv
+%  Vector of values for variables held constant during the fit of sti,
+%  input as a vector.
+%  If sti_model is 'sti_p', set values of [Fo Fm sigma]
+%  If sti_model is 'sti_fofmsig_pcon', set value of [p]
+
+%__________________________________________________________
+% Field: fit_str
+%  Fit single turnover relaxation?
+%  Choose one of the following, input as a number:
+%     yes = 1
+%     no  = 0
+
+%__________________________________________________________
+% Field: str_model
+%  Specified model for curve fit of single turnover relaxation.
+%  Choose one of the following options, input as a text string.
+%    str_tau1x    = fit, Fo, Fm and tau1
+%    str_tau1xcon = fit tau1 holding Fo and Fm constant
+%    str_tau2x    = fit Fo, Fm, tau1/alpha1, tau2 (alpha2=1-alpha1)
+%    str_tau2xcon = fit tau1/alpha1, tau2 (alpha2=1-alpha1), holding
+%                   Fo and Fm constant
+
+%__________________________________________________________
+% Field: str_cv
+%  Vector of values for variables held constant during the fit of str,
+%  input as a vector.
+%  If str_model is 'str_tau1xcon' or 'str_tau2xcon', set values of [Fo Fm]

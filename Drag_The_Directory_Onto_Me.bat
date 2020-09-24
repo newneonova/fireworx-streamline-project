@@ -4,6 +4,19 @@
 :: see "https://stackoverflow.com/a/12264592/1016343" for description
 ::::::::::::::::::::::::::::::::::::::::::::
  @echo off
+ 
+   SET commandline=%*
+   
+      SET _string=###%commandline%###
+   SET _string=%_string:"###=%
+   SET _string=%_string:###"=%
+   SET _string=%_string:###=%
+   
+   SET _string = %_string%\
+   SET _string = "%_string%"
+    :: store it to file
+    echo %_string%\> "__temp__.txt"
+
  CLS
  ECHO.
  ECHO =============================
@@ -57,14 +70,28 @@
  ::START
  ::::::::::::::::::::::::::::
  REM Run shell as admin (example) - put here code as you like
- ECHO %batchName% Arguments: P1=%1 P2=%2 P3=%3 P4=%4 P5=%5 P6=%6 P7=%7 P8=%8 P9=%9
+
 
 @echo off
-set dirProcess=%1
-echo %dirProcess%
+
+set /p dirProcess=<__temp__.txt
+
+echo path is %dirProcess%
+
+del __temp__.txt
+
+      SET _string=###%dirProcess%###
+   SET _string=%_string:"###=%
+   SET _string=%_string:###"=%
+   SET _string=%_string:###=%
+  
+   
+   SET _string = %_string%\
+   SET _string = "%_string%"
+   echo 'dir /b /a-d "%_string%*" '
 
 FOR /f "delims=" %%a IN (
- 'dir /b /a-d "%dirProcess%\*" '
+ 'dir /b /a-d "%_string%*" '
  ) DO (
  setlocal enableDelayedExpansion
  echo %%a
@@ -86,21 +113,21 @@ set "_srcp=%%a"
 
 
 
-echo end of loop
-echo  %dirProcess%
-echo  %dataFileName%
+
+echo  the directory is  %dirProcess%
+echo  the data file name is %dataFileName%
 
 
-type "%~dp0\ScriptProcessingFiles\configPre.txt" > out.txt
-echo  '%dirProcess%\'; >> out.txt
+type "%~dp0\ScriptFiles\ScriptProcessingFiles\configPre.txt" > out.txt
+echo  '%dirProcess%'; >> out.txt
 
-type "%~dp0\ScriptProcessingFiles\configMid.txt" >> out.txt
+type "%~dp0\ScriptFiles\ScriptProcessingFiles\configMid.txt" >> out.txt
 echo  '%dataFileName%'; >> out.txt
 
-type "%~dp0\ScriptProcessingFiles\configPost.txt" >> out.txt
+type "%~dp0\ScriptFiles\ScriptProcessingFiles\configPost.txt" >> out.txt
 
 echo Opening matlab and running fireworx, please wait until matlab closes. The results should be in your file directory.
 
-matlab -nosplash -r "run %~dp0\doTheFireworx.m"
+matlab -nosplash -r "run '%~dp0\ScriptFiles\doTheFireworx.m'"
 
 pause

@@ -18,9 +18,9 @@ SomeDir
 	|-DES823B.002
 	|-DES823B.003
 	
-And you processes it in fireworx by dragging the folder "SomeDir" onto the shortcut "Drag_The_Directory_Onto_Me.bat - Shortcut"
+And you processes it in fireworx by dragging the folder "SomeDir" onto the bat file "Drag_The_Directory_Onto_Me.bat"
 
-This will run a .bat file and give it the path to the directory "SomeDir" as an argument.  (bat file is  in ScriptFiles/Drag_The_Directory_Onto_Me.bat if you want to take a look)
+This will run the script in the .bat file and give it the path to the directory "SomeDir" as an argument.  
 
 
 This is what it does:

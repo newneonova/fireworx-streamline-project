@@ -1,5 +1,5 @@
 locToCopy=which('fireworx_config')
-localConfig='.\out.txt'
+localConfig='..\out.txt'
 
 fid = fopen(localConfig);
 data = fscanf(fid, '%c');

@@ -91,7 +91,7 @@ settings(1).first_time_point = 3;
 
 settings(1).gain_calpath   = '';
 settings(1).led_calpath    = '';
-settings(1).datapath       = 'C:\Users\RSF\Documents\GitHub\fireworx-streamline-project\fireworxProcessing\'; 
+settings(1).datapath       = 'C:\Users\RSF\Documents\GitHub\A directory WIth Space in IT\fireworx-streamline-project\fireworxProcessing\'; 
 
 settings(1).maketextfile   = 1;
 settings(1).outname        = 'pro';
